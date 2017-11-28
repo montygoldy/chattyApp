@@ -9,10 +9,21 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      messages: [],
-      currentUser: {}
-    }
+      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+       messages: [
+      {
+        id: "1",
+        username: "Bob",
+        content: "Has anyone seen my marbles?"
+      },
+      {
+        id: "2",
+        username: "Anonymous",
+        content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
+      }
+    ]
   }
+}
 
 
   render() {
@@ -20,9 +31,15 @@ class App extends Component {
     return (
 
       <div className="wrapper">
-        <ChatBar user = {this.state.currentUser} />
-        <MessageList />
-        <Message />
+        <nav className="navbar">
+          <h1 className="navbar-brand">Chatty</h1>
+        </nav>
+        <ChatBar currentUser = {this.state.currentUser} />
+        <MessageList messages = {this.state.messages}/>
+
+        <main className="messages">
+          <Message />
+        </main>
       </div>
     );
   }
