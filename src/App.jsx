@@ -10,19 +10,11 @@ class App extends Component {
     super(props);
     this.newMessage=this.newMessage.bind(this);
 
+
+
     this.state = {
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-       messages: [
-      {
-        id: "1",
-        username: "Bob",
-        content: "Has anyone seen my marbles?"
-      },
-      {
-        id: "2",
-        username: "Anonymous",
-        content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-      }]
+       messages: []
     }
   }
 
@@ -63,6 +55,12 @@ class App extends Component {
 
   componentDidMount(){
     console.log("componentDidMount <App />");
+
+     this.socket = new WebSocket("ws://localhost:3001");
+     this.socket.onopen = (event) => {
+      console.log("Connected to server");
+      this.socket.send("Connected to the server");
+    }
   }
 }
 export default App;
