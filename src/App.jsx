@@ -8,9 +8,9 @@ class App extends Component {
 
   constructor(props){
     super(props);
-    this.newMessage=this.newMessage.bind(this);
+    this.newMessage = this.newMessage.bind(this);
 
-
+    this.socket = new WebSocket("ws://localhost:3001");
 
     this.state = {
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
@@ -24,15 +24,31 @@ class App extends Component {
     let username = this.state.currentUser.name;
     let content = messageContent;
     let newMessageObject = {
-      id: id,
+
       username: username,
       content: content
     };
     console.log(newMessageObject);
-    let messages = this.state.messages.concat(newMessageObject)
-    this.setState({messages: messages});
+    this.socket.send(JSON.stringify(newMessageObject));
 
   }
+
+
+ //  this.socket.onmessage = (event) => {
+ //    console.log(event);
+ //  }
+
+
+ //  this.socket.onmessage = (event) => {
+ // +      console.log('in onmessage');
+ // +      let data = JSON.parse(event.data).data;
+ // +      let messages =this.state.messages.concat(data);
+ // +      console.log("========", this.state.messages, messages);
+ // +      this.setState({messages: messages});
+ // +      this.setState({currentUser: {name: data.username}});
+
+ // +    }
+ // +  }
 
 
   render() {
@@ -43,7 +59,7 @@ class App extends Component {
         <nav className="navbar">
           <h1 className="navbar-brand">Chatty</h1>
         </nav>
-        <ChatBar currentUser = {this.state.currentUser} changeHandler={this.newMessage}/>
+        <ChatBar currentUser = {this.state.currentUser} changeHandler={this.newMessage} socket={this.socket}/>
         <MessageList messages = {this.state.messages}/>
 
         <main className="messages">
@@ -56,10 +72,11 @@ class App extends Component {
   componentDidMount(){
     console.log("componentDidMount <App />");
 
-     this.socket = new WebSocket("ws://localhost:3001");
+
      this.socket.onopen = (event) => {
       console.log("Connected to server");
-      this.socket.send("Connected to the server");
+
+
     }
   }
 }
