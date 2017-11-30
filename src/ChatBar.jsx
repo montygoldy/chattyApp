@@ -10,13 +10,31 @@ class ChatBar extends Component {
 	}
 
   handleChange(event) {
-   	this.setState({content: event.target.value});
+   	let id = event.target.id;
+    let value = event.target.value;
+
+    if(id === "new_message"){
+      this.setState({content: value});
+    }
+
+    if(id === "username"){
+      this.setState({username: value });
+    }
 	}
 
   handleSubmit(event){
-  	if(event.key === "Enter"){
-  		this.props.changeHandler(this.state.content);
- 			event.target.value ="";
+      let id = event.target.id;
+      let value = event.target.value.trim();
+      let contentObj = {
+        username: this.state.username,
+        content: this.state.content
+      }
+
+  	if(event.key === "Enter" && value != ""){
+      if(id === "new_message"){
+    		this.props.newMessage(contentObj);
+   			event.target.value ="";
+      }
   	}
   }
 
@@ -25,8 +43,8 @@ class ChatBar extends Component {
 	const content = this.state.value;
 		return (
 			<footer className="chatbar">
-        <input className="chatbar-username" type="text" defaultValue={this.props.currentUser.name} placeholder="Your Name (Optional)" />
-        <input className="chatbar-message" type="text" placeholder="Type a message and hit ENTER" onChange={this.handleChange} onKeyDown={this.handleSubmit}/>
+        <input id= "username" className="chatbar-username" type="text" value={this.props.username}  onChange={this.handleChange} onKeyDown={this.handleSubmit} placeholder="Your Name (Optional)" />
+        <input id= "new_message" className="chatbar-message" type="text" placeholder="Type a message and hit ENTER" onChange={this.handleChange} onKeyDown={this.handleSubmit}/>
       </footer>
 
 		);

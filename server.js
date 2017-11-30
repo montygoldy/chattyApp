@@ -1,5 +1,4 @@
 const express = require('express');
-const uuid = require('uuid');
 const SocketServer = require('ws').Server;
 
 var webpack = require('webpack');

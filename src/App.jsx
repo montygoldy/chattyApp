@@ -13,42 +13,16 @@ class App extends Component {
     this.socket = new WebSocket("ws://localhost:3001");
 
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {}, // optional. if currentUser is not defined, it means the user is Anonymous
        messages: []
     }
   }
 
 
   newMessage (messageContent) {
-    let id = this.state.messages.length + 1;
-    let username = this.state.currentUser.name;
-    let content = messageContent;
-    let newMessageObject = {
-
-      username: username,
-      content: content
-    };
-    console.log(newMessageObject);
-    this.socket.send(JSON.stringify(newMessageObject));
-
+    this.socket.send(JSON.stringify(messageContent));
   }
 
-
- //  this.socket.onmessage = (event) => {
- //    console.log(event);
- //  }
-
-
- //  this.socket.onmessage = (event) => {
- // +      console.log('in onmessage');
- // +      let data = JSON.parse(event.data).data;
- // +      let messages =this.state.messages.concat(data);
- // +      console.log("========", this.state.messages, messages);
- // +      this.setState({messages: messages});
- // +      this.setState({currentUser: {name: data.username}});
-
- // +    }
- // +  }
 
 
   render() {
@@ -59,12 +33,17 @@ class App extends Component {
         <nav className="navbar">
           <h1 className="navbar-brand">Chatty</h1>
         </nav>
-        <ChatBar currentUser = {this.state.currentUser} changeHandler={this.newMessage} socket={this.socket}/>
-        <MessageList messages = {this.state.messages}/>
+
+
 
         <main className="messages">
+          <MessageList messages = {this.state.messages}/>
           <Message />
         </main>
+
+        <ChatBar currentUser = {this.state.currentUser} newMessage={this.newMessage}/>
+
+
       </div>
     );
   }
@@ -75,15 +54,22 @@ class App extends Component {
 
      this.socket.onopen = (event) => {
       console.log("Connected to server");
+      }
 
 
+      this.socket.onmessage = (event) => {
+        console.log("onmessage");
+        let data = JSON.parse(event.data).incomingMessage;
+        let messages = this.state.messages.concat(data);
+        console.log(messages);
+        this.setState({messages: messages});
+        this.setState({currentUser: {name: data.username}})
+      }
     }
-  }
 }
+
+
 export default App;
-
-
-
 
 
 
