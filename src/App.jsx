@@ -13,7 +13,7 @@ class App extends Component {
     this.socket = new WebSocket("ws://localhost:3001");
 
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+    	 lastUsername: "", // optional. if currentUser is not defined, it means the user is Anonymous
        messages: [],
        usersOnline: 1
     }
@@ -24,31 +24,42 @@ class App extends Component {
     console.log("componentDidMount <App />");
 
 
-     this.socket.onopen = () => {
-      console.log("Connected to server");
-      }
+    this.socket.onopen = () => {
+    	console.log("Connected to server");
+    }
 
 
-      this.socket.onmessage = (event) => {
-      	let broadcast = JSON.parse(event.data);
+    this.socket.onmessage = (event) => {
+    	let broadcast = JSON.parse(event.data);
 
-      	if(broadcast.type === 'userCount'){
-      		let usersOnline = broadcast.usersOnline;
-        	this.setState({usersOnline: usersOnline});
-      	}
 
-        let messages = this.state.messages.concat(broadcast);
-        console.log(messages);
+    	if(broadcast.type === 'incomingMessage'){
+        const messages = this.state.messages.concat(broadcast);
         this.setState({messages: messages});
-        this.setState({currentUser: {name: broadcast.username}})
-
-    	}
-
-  }
+      } else if(broadcast.type === 'incomingNotification'){
+          const content = this.state.messages.concat(broadcast);
+          this.setState({messages: content});
+      } else if(broadcast.type === 'userCount') {
+        let usersOnline = broadcast.usersOnline;
+    		this.setState({usersOnline: usersOnline});
+      } else {
+        throw new Error("Unknown event type " + broadcast.type);
+      }
+  	}
+	}
 
 
   newMessage (messageContent) {
-    this.socket.send(JSON.stringify(messageContent));
+  	const data = {type: 'postMessage', username: messageContent.username, content: messageContent.content};
+  	console.log(messageContent.username, messageContent, this.state.lastUsername);
+    this.socket.send(JSON.stringify(data));
+
+   	if(messageContent.username !== this.state.lastUsername && this.state.lastUsername !== undefined){
+     const content = `${this.state.lastUsername} changed their name to ${messageContent.username}.`;
+     const data = {type: 'postNotification', username: messageContent.username, content: content};
+     this.socket.send(JSON.stringify(data));
+    }
+    this.setState({lastUsername : messageContent.username});
   }
 
   render() {
@@ -64,11 +75,11 @@ class App extends Component {
 
 
         <main className="messages">
-          <MessageList messages = {this.state.messages}/>
+          <MessageList messages = {this.state.messages} content = {this.state.content}/>
           <Message />
         </main>
 
-        <ChatBar currentUser = {this.state.currentUser} newMessage={this.newMessage}/>
+        <ChatBar onNewMessage={this.newMessage}/>
 
 
       </div>

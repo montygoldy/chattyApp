@@ -39,8 +39,14 @@ console.log('Client connected');
   ws.on('message', (message) => {
     let incomingMessage = JSON.parse(message);
     incomingMessage.id = uuid();
-    console.log(incomingMessage);
-    wss.broadcast(incomingMessage);
+
+    if(incomingMessage.type === 'postMessage'){
+      incomingMessage.type = 'incomingMessage';
+    }
+    if(incomingMessage.type === 'postNotification'){
+      incomingMessage.type = 'incomingNotification';
+    }
+     wss.broadcast(incomingMessage);
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.

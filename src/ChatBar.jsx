@@ -34,9 +34,9 @@ class ChatBar extends Component {
 
     // Grabbing the enter key on message input
 
-    if(event.key === "Enter" && value != ""){
+    if(event.key === "Enter" && value !== ""){
       if(id === "new_message"){
-        this.props.newMessage(contentObj);
+        this.props.onNewMessage(contentObj);
         event.target.value ="";
       }
     }
