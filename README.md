@@ -3,17 +3,6 @@ React Boilerplate
 
 A minimal and light dev environment for ReactJS.
 
-### Usage
-
-Clone the boilerplate and create your own git repo.
-
-```
-git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
-cd react-simple-boilerplate
-git remote rm origin
-git remote add origin [YOUR NEW REPOSITORY]
-# Manually update your package.json file
-```
 
 Install the dependencies and start the server.
 
@@ -23,19 +12,17 @@ npm start
 open http://localhost:3000
 ```
 
-### Static Files
+### Project Description
 
-You can store static files like images, fonts, etc in the `build` folder.
+Many of the web applications that you use today have real-time functionality where the user does not have to reload the page in order to see updates. Major examples of these include Slack, Twitter and Facebook.
 
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
+Your app, Chatty will allow users to communicate with each other without having to register accounts. It will use React, a popular front-end library created and used heavily by Facebook as well as modern tools for Node including Webpack and Babel. A minimal and light dev environment for ReactJS.
 
-### Linting
+### Features
 
-This boilerplate project includes React ESLint configuration.
+- Random user color
+- Attach gify images in messages
 
-```
-npm run lint
-```
 
 ### Dependencies
 
