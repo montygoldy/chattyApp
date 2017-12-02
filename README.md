@@ -3,6 +3,9 @@ Chatty
 
 A minimal and light dev environment for ReactJS.
 
+### Screenshot
+
+!["Screenshot of chatty messages"](https://github.com/montygoldy/chattyApp/blob/master/docs/screenshot1.png?raw=true)
 
 ### Project Description
 
