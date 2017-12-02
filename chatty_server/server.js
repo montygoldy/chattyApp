@@ -18,7 +18,6 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
-
 wss.broadcast = (data) => {
   console.log('broadcast!');
   wss.clients.forEach((client) => {
@@ -32,11 +31,16 @@ wss.broadcast = (data) => {
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
-  // broadcast for username
+ assignColor(ws);
+
+
+
+  // broadcast for username and color
 
   wss.broadcast({
     type: 'userCount',
-    usersOnline: wss.clients.size
+    usersOnline: wss.clients.size,
+
   });
 
   ws.on('message', (message) => {
@@ -67,11 +71,9 @@ wss.on('connection', (ws) => {
           wss.broadcast(incomingMessage);
       })
     } else {
+      // broadcasting the message
        wss.broadcast(incomingMessage);
-  }
-
-    // broadcasting the message
-
+    }
 
   });
 
@@ -85,4 +87,23 @@ wss.on('connection', (ws) => {
   });
 });
 
+// To get random colors
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+function assignColor(client) {
+  const userColor = getRandomColor();
+  const assignUserColor = {
+    type: "colorNotification",
+    userColor: userColor
+  };
+  client.send(JSON.stringify(assignUserColor));
+}
 

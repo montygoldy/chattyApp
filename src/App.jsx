@@ -15,7 +15,8 @@ class App extends Component {
     this.state = {
     	 lastUsername: "Anonymous", // optional. if currentUser is not defined, it means the user is Anonymous
        messages: [],
-       usersOnline: 1
+       usersOnline: 1,
+       color: '#000000'
     }
   }
 
@@ -37,7 +38,10 @@ class App extends Component {
     	if (broadcast.type === 'userCount') {
         let usersOnline = broadcast.usersOnline;
     		this.setState({usersOnline: usersOnline});
-      } else {
+      } else if(broadcast.type === "colorNotification"){
+          let color = broadcast.userColor;
+          this.setState({color: color});
+      }else {
 
       	// handle messages
 
@@ -53,7 +57,8 @@ class App extends Component {
   	const data = {
   		type: 'postMessage',
   		username: messageContent.username,
-  		content: messageContent.content
+  		content: messageContent.content,
+  		color: this.state.color
   	};
 
     this.socket.send(JSON.stringify(data));
@@ -62,7 +67,7 @@ class App extends Component {
 
    	if (messageContent.username !== this.state.lastUsername){
     	const content = `${this.state.lastUsername} changed their name to ${messageContent.username}.`;
-    	const data = {type: 'postNotification', username: messageContent.username, content: content};
+    	const data = {type: 'postNotification', username: messageContent.username, content: content, color:this.state.color};
       this.socket.send(JSON.stringify(data));
     }
 

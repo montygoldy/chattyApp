@@ -51,8 +51,23 @@ class ChatBar extends Component {
   const content = this.state.value;
     return (
       <footer className="chatbar">
-        <input id= "username" className="chatbar-username" type="text" value={this.props.username}  onChange={this.handleChange} onKeyDown={this.handleSubmit} placeholder="Name (optional)" />
-        <input id= "new_message" className="chatbar-message" type="text" placeholder="Enter your message and hit ENTER" onChange={this.handleChange} onKeyDown={this.handleSubmit}/>
+        <input
+          id= "username"
+          className="chatbar-username"
+          type="text"
+          value={this.props.username}
+          onChange={this.handleChange}
+          onKeyDown={this.handleSubmit}
+          placeholder="Name (optional)"
+        />
+        <input
+          id= "new_message"
+          className="chatbar-message"
+          type="text"
+          placeholder="Enter your message and hit ENTER"
+          onChange={this.handleChange}
+          onKeyDown={this.handleSubmit}
+        />
       </footer>
 
     );

@@ -9,6 +9,7 @@ textarea:focus, input:focus{
 }
 
 
+
 body {
     background: #439584;
     color: black;
@@ -16,6 +17,10 @@ body {
     font-size: 14px;
     margin: 70px 0;
     font-family:$primary-font;
+
+  img{
+    width:60%!important;
+  }
 
   .chatbar {
     bottom: 0;

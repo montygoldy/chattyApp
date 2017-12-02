@@ -11,10 +11,11 @@ class MessageList extends Component {
       return (<Message
         key = {message.id}
         type = {message.type}
+        color = {message.color}
         username = {message.username}
         content = {message.content} />);
     });
-
+    console.log(this.props.messages);
     return (
       <div>
         <div>
