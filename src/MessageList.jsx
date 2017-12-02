@@ -5,6 +5,8 @@ class MessageList extends Component {
 
   render() {
 
+    // create a new array and assigning all the values
+
     const message = this.props.messages.map(message => {
       return (<Message
         key = {message.id}
@@ -12,7 +14,7 @@ class MessageList extends Component {
         username = {message.username}
         content = {message.content} />);
     });
-   console.log("messagelist", this.props.messages);
+
     return (
       <div>
         <div>

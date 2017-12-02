@@ -21,72 +21,72 @@ class App extends Component {
 
 
   componentDidMount(){
-    console.log("componentDidMount <App />");
-
 
     this.socket.onopen = () => {
     	console.log("Connected to server");
     }
 
-
     this.socket.onmessage = (event) => {
+
+    	// Getting new message from server
+
     	let broadcast = JSON.parse(event.data);
 
+    	// handle usercout
 
-    	if(broadcast.type === 'incomingMessage'){
-        const messages = this.state.messages.concat(broadcast);
-        this.setState({messages: messages});
-      } else if(broadcast.type === 'incomingNotification'){
-          const content = this.state.messages.concat(broadcast);
-          this.setState({messages: content});
-      } else if(broadcast.type === 'userCount') {
+    	if (broadcast.type === 'userCount') {
         let usersOnline = broadcast.usersOnline;
     		this.setState({usersOnline: usersOnline});
       } else {
-        throw new Error("Unknown event type " + broadcast.type);
+
+      	// handle messages
+
+        const messages = this.state.messages.concat(broadcast);
+        this.setState({messages: messages});
       }
   	}
 	}
 
 
   newMessage (messageContent) {
-  	const data = {type: 'postMessage', username: messageContent.username, content: messageContent.content};
-  	console.log(messageContent.username, messageContent, this.state.lastUsername);
+
+  	const data = {
+  		type: 'postMessage',
+  		username: messageContent.username,
+  		content: messageContent.content
+  	};
+
     this.socket.send(JSON.stringify(data));
 
-   	if(messageContent.username !== this.state.lastUsername && this.state.lastUsername !== undefined){
-     const content = `${this.state.lastUsername} changed their name to ${messageContent.username}.`;
-     const data = {type: 'postNotification', username: messageContent.username, content: content};
-     this.socket.send(JSON.stringify(data));
+    //COnditions to check if the user name changed
+
+   	if (messageContent.username !== this.state.lastUsername){
+    	const content = `${this.state.lastUsername} changed their name to ${messageContent.username}.`;
+    	const data = {type: 'postNotification', username: messageContent.username, content: content};
+      this.socket.send(JSON.stringify(data));
     }
+
     this.setState({lastUsername : messageContent.username});
   }
 
   render() {
-  console.log("Rendering <App/>");
-    return (
 
+    return (
       <div className="wrapper">
         <nav className="navbar">
           <h1 className="navbar-brand">Chatty</h1>
-          <span>{this.state.usersOnline} users online</span>
+          <span className = "user_online" >{this.state.usersOnline} <span>users online</span></span>
         </nav>
-
-
 
         <main className="messages">
           <MessageList messages = {this.state.messages} content = {this.state.content}/>
           <Message />
         </main>
 
-        <ChatBar onNewMessage={this.newMessage}/>
-
-
+        <ChatBar onNewMessage = {this.newMessage} />
       </div>
     );
   }
-
-
 }
 
 

@@ -9,8 +9,10 @@ class ChatBar extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // handling the user input
+
   handleChange(event) {
-    let id = event.target.id;
+    let id = event.target.id;  // assigning id to the input id
     let value = event.target.value;
 
     if(id === "new_message"){
@@ -22,9 +24,11 @@ class ChatBar extends Component {
     }
   }
 
+  // handling the submit of the input
+
   handleSubmit(event){
     let id = event.target.id;
-    let value = event.target.value.trim();
+    let value = event.target.value;
     let contentObj = {
       username: this.state.username || "Anonymous",
       content: this.state.content
@@ -47,8 +51,8 @@ class ChatBar extends Component {
   const content = this.state.value;
     return (
       <footer className="chatbar">
-        <input id= "username" className="chatbar-username" type="text" value={this.props.username}  onChange={this.handleChange} onKeyDown={this.handleSubmit} placeholder="Your Name (Optional)" />
-        <input id= "new_message" className="chatbar-message" type="text" placeholder="Type a message and hit ENTER" onChange={this.handleChange} onKeyDown={this.handleSubmit}/>
+        <input id= "username" className="chatbar-username" type="text" value={this.props.username}  onChange={this.handleChange} onKeyDown={this.handleSubmit} placeholder="Name (optional)" />
+        <input id= "new_message" className="chatbar-message" type="text" placeholder="Enter your message and hit ENTER" onChange={this.handleChange} onKeyDown={this.handleSubmit}/>
       </footer>
 
     );

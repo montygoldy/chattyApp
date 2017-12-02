@@ -19,17 +19,17 @@ const wss = new SocketServer({ server });
 wss.broadcast = (data) => {
   console.log('broadcast!');
   wss.clients.forEach((client) => {
-      client.send(JSON.stringify(data));
+    client.send(JSON.stringify(data));
   });
 };
-
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
-console.log('Client connected');
+  console.log('Client connected');
 
+  // broadcast for username
 
   wss.broadcast({
     type: 'userCount',
@@ -37,22 +37,28 @@ console.log('Client connected');
   });
 
   ws.on('message', (message) => {
+
+    // Grabbing the incoming message
+
     let incomingMessage = JSON.parse(message);
-    incomingMessage.id = uuid();
+    incomingMessage.id = uuid(); // assigning id to random digits
+
+    // checking the type property of the incoming message
 
     if(incomingMessage.type === 'postMessage'){
       incomingMessage.type = 'incomingMessage';
-    }
-    if(incomingMessage.type === 'postNotification'){
+    } else if(incomingMessage.type === 'postNotification'){
       incomingMessage.type = 'incomingNotification';
     }
+
+    // broadcasting the message
+
      wss.broadcast(incomingMessage);
   });
 
-  // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
     console.log('Client disconnected')
-    // Call broadcast with usercount object
+
     wss.broadcast({
       type: 'userCount',
       usersOnline: wss.clients.size
