@@ -2,6 +2,9 @@
 const uuid = require('uuid');
 const express = require('express');
 const SocketServer = require('ws').Server;
+const querystring = require('querystring');
+const fetch = require('node-fetch');
+
 
 // Set the port to 3001
 const PORT = 3001;
@@ -51,9 +54,25 @@ wss.on('connection', (ws) => {
       incomingMessage.type = 'incomingNotification';
     }
 
+    if (matches = incomingMessage.content.match(/^\/giphy (.+)$/)) {
+      let qs = querystring.stringify({
+        api_key: 'SqWpClGpSVwVskro0hCTobNZWY0Wr6G0',
+        tag: matches[1]
+      });
+
+      fetch(`https://api.giphy.com/v1/gifs/random?${qs}`)
+        .then( resp => {return resp.json() } )
+        .then( json => {
+          incomingMessage.content = `<img src="${json.data.image_url}" alt=""/>`
+          wss.broadcast(incomingMessage);
+      })
+    } else {
+       wss.broadcast(incomingMessage);
+  }
+
     // broadcasting the message
 
-     wss.broadcast(incomingMessage);
+
   });
 
   ws.on('close', () => {
